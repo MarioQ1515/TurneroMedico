@@ -1,8 +1,13 @@
 package TurneroM;
 
+import javax.swing.*;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("TurneroM listo (Paso 1).");
-        // En próximos pasos agregaremos menú y lectura por consola sin Scanner.
+        SwingUtilities.invokeLater(() -> {
+            try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception ignored) {}
+            new MainFrame().setVisible(true);
+        });
     }
 }
+

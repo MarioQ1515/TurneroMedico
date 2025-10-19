@@ -1,8 +1,9 @@
 package TurneroM;
 
 public enum Especialidad {
-    CLINICA_MEDICA,
-    PEDIATRIA,
-    CARDIOLOGIA,
-    DERMATOLOGIA
+    CLINICA,
+    PEDIATRA,
+    CARDIOLOGO,
+    DERMATOLOGO,
+    OTORRINOLARINGOLOGO
 }
