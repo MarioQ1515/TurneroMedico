@@ -85,4 +85,17 @@ public class TurnoService {
         }
         return med.getCostoConsulta();
     }
+
+    public ReporteRecaudacionMedico reporteRecaudacionMedico(long medicoId, LocalDate desde, LocalDate hasta) {
+        int cantidad = 0;
+        double total = 0.0;
+        for (Turno t : dao.findByMedicoBetween(medicoId, desde, hasta)) {
+            if (t.getEstado() == EstadoTurno.CONFIRMADO || t.getEstado() == EstadoTurno.ATENDIDO) {
+                cantidad++;
+                total += t.getCostoFinal();
+            }
+        }
+        return new ReporteRecaudacionMedico(medicoId, desde, hasta, cantidad, total);
+    }
+
 }

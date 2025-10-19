@@ -11,13 +11,11 @@ import java.util.Map;
 
 public class TurnoFrame extends JFrame {
 
-    // Servicios / DAOs
     private final PacienteService pacienteService = new PacienteService(new H2PacienteDao());
     private final MedicoService medicoService = new MedicoService(new H2MedicoDao());
     private final ConsultorioDao consultorioDao = new H2ConsultorioDao();
     private final TurnoService turnoService = new TurnoService(new H2TurnoDao());
 
-    // Modelos auxiliares para lookup por id -> nombre
     private Map<Long, Paciente> cachePacientes = new HashMap<>();
     private Map<Long, Medico> cacheMedicos = new HashMap<>();
     private Map<Long, Consultorio> cacheConsultorios = new HashMap<>();
@@ -61,11 +59,8 @@ public class TurnoFrame extends JFrame {
         cargarTabla();
     }
 
-    // ----------------- Acciones -----------------
-
     private void cargarTabla() {
         try {
-            // refresco caches para mostrar nombres en la tabla
             cachePacientes = mapById(pacienteService.listar());
             cacheMedicos = mapById(medicoService.listar());
             cacheConsultorios = mapById(consultorioDao.findAll());
@@ -90,17 +85,34 @@ public class TurnoFrame extends JFrame {
 
     private void crearTurno() {
         try {
-            // Dialog de alta: combos + fecha/hora
             JComboBox<Paciente> cbPaciente = new JComboBox<>(pacienteService.listar().toArray(new Paciente[0]));
             JComboBox<Medico> cbMedico = new JComboBox<>(medicoService.listar().toArray(new Medico[0]));
-            JComboBox<Consultorio> cbConsultorio = new JComboBox<>(consultorioDao.findAll().toArray(new Consultorio[0]));
-            JTextField tfFecha = new JTextField("2025-10-20"); // sugerencia
-            JTextField tfHora  = new JTextField("10:00");      // sugerencia
+            JComboBox<Consultorio> cbConsultorio = new JComboBox<>();
+            recargarConsultorios(cbConsultorio);
+
+            JButton btnAddCons = new JButton("+");
+            btnAddCons.addActionListener(e -> {
+                String nombre = JOptionPane.showInputDialog(this, "Nombre del consultorio:");
+                if (nombre != null && !nombre.isBlank()) {
+                    Consultorio nuevo = new Consultorio(0L, nombre.trim());
+                    consultorioDao.insert(nuevo);
+                    long idNuevo = nuevo.getId();
+                    recargarConsultorios(cbConsultorio);
+                    seleccionarConsultorioPorId(cbConsultorio, idNuevo);
+                }
+            });
+
+            JPanel filaCons = new JPanel(new BorderLayout(6, 0));
+            filaCons.add(cbConsultorio, BorderLayout.CENTER);
+            filaCons.add(btnAddCons, BorderLayout.EAST);
+
+            JTextField tfFecha = new JTextField(LocalDate.now().plusDays(1).toString());
+            JTextField tfHora  = new JTextField("10:00");
 
             JPanel form = new JPanel(new GridLayout(0,2,8,8));
             form.add(new JLabel("Paciente:"));    form.add(cbPaciente);
             form.add(new JLabel("Médico:"));      form.add(cbMedico);
-            form.add(new JLabel("Consultorio:")); form.add(cbConsultorio);
+            form.add(new JLabel("Consultorio:")); form.add(filaCons);
             form.add(new JLabel("Fecha (YYYY-MM-DD):")); form.add(tfFecha);
             form.add(new JLabel("Hora (HH:mm):"));       form.add(tfHora);
 
@@ -110,12 +122,11 @@ public class TurnoFrame extends JFrame {
             Paciente pac = (Paciente) cbPaciente.getSelectedItem();
             Medico med = (Medico) cbMedico.getSelectedItem();
             Consultorio cons = (Consultorio) cbConsultorio.getSelectedItem();
-
-            if (pac == null || med == null || cons == null) { showWarn("Debe seleccionar paciente, médico y consultorio."); return; }
+            if (pac == null || med == null || cons == null) { showWarn("Seleccione paciente, médico y consultorio."); return; }
 
             LocalDate fecha = parseFecha(tfFecha.getText());
             LocalTime hora = parseHora(tfHora.getText());
-            if (fecha == null || hora == null) return; // parse ya muestra error
+            if (fecha == null || hora == null) return;
 
             Turno creado = turnoService.crear(fecha, hora, pac, med, cons);
             showInfo("Turno creado. ID=" + creado.getId() + " | Estado=" + creado.getEstado() + " | $ " + creado.getCostoFinal());
@@ -164,8 +175,6 @@ public class TurnoFrame extends JFrame {
         }
     }
 
-    // ----------------- Helpers -----------------
-
     private LocalDate parseFecha(String s) {
         try { return LocalDate.parse(s.trim()); }
         catch (Exception e) { showError("Fecha inválida. Formato: YYYY-MM-DD"); return null; }
@@ -187,7 +196,6 @@ public class TurnoFrame extends JFrame {
     private String nombrePaciente(long id) {
         Paciente p = cachePacientes.get(id);
         return p == null ? ("#" + id) : (p.getNombre() + " " + p.getApellido());
-        // Si preferís DNI: return p == null ? ("#" + id) : (p.getApellido()+", "+p.getNombre()+" ("+p.getDni()+")");
     }
 
     private String nombreMedico(long id) {
@@ -208,5 +216,19 @@ public class TurnoFrame extends JFrame {
             else if (t instanceof Consultorio) map.put(((Consultorio) t).getId(), t);
         }
         return map;
+    }
+
+    private void recargarConsultorios(JComboBox<Consultorio> combo) {
+        DefaultComboBoxModel<Consultorio> model = new DefaultComboBoxModel<>();
+        for (Consultorio c : consultorioDao.findAll()) model.addElement(c);
+        combo.setModel(model);
+    }
+
+    private void seleccionarConsultorioPorId(JComboBox<Consultorio> combo, long id) {
+        ComboBoxModel<Consultorio> m = combo.getModel();
+        for (int i = 0; i < m.getSize(); i++) {
+            Consultorio c = m.getElementAt(i);
+            if (c.getId() == id) { combo.setSelectedIndex(i); break; }
+        }
     }
 }

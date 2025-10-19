@@ -36,4 +36,11 @@ public class Paciente {
 
     public String getObraSocial() { return obraSocial; }
     public void setObraSocial(String obraSocial) { this.obraSocial = obraSocial; }
+
+
+    @Override
+    public String toString() {
+        return apellido + ", " + nombre; // o: apellido + ", " + nombre + " (" + dni + ")"
+    }
+
 }
