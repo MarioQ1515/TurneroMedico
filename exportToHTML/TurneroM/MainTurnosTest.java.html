@@ -1,0 +1,104 @@
+<html>
+<head>
+<title>MainTurnosTest.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #6aab73;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainTurnosTest.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">TurneroM</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">time</span><span class="s2">.</span><span class="s1">LocalDate</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">time</span><span class="s2">.</span><span class="s1">LocalTime</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">MainTurnosTest </span><span class="s2">{</span>
+    <span class="s0">public static void </span><span class="s1">main</span><span class="s2">(</span><span class="s1">String</span><span class="s2">[] </span><span class="s1">args</span><span class="s2">) {</span>
+        <span class="s3">// Servicios/DAOs</span>
+        <span class="s1">PacienteService pacienteService </span><span class="s2">= </span><span class="s0">new </span><span class="s1">PacienteService</span><span class="s2">(</span><span class="s0">new </span><span class="s1">H2PacienteDao</span><span class="s2">());</span>
+        <span class="s1">MedicoService   medicoService   </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MedicoService</span><span class="s2">(</span><span class="s0">new </span><span class="s1">H2MedicoDao</span><span class="s2">());</span>
+        <span class="s1">ConsultorioDao  consDao         </span><span class="s2">= </span><span class="s0">new </span><span class="s1">H2ConsultorioDao</span><span class="s2">();</span>
+        <span class="s1">TurnoService    turnoService    </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TurnoService</span><span class="s2">(</span><span class="s0">new </span><span class="s1">H2TurnoDao</span><span class="s2">());</span>
+
+        <span class="s3">// 1) Asegurar datos base (si no existen)</span>
+        <span class="s1">Paciente paciente </span><span class="s2">= </span><span class="s1">asegurarPaciente</span><span class="s2">(</span><span class="s1">pacienteService</span><span class="s2">);</span>
+        <span class="s1">Medico   medico   </span><span class="s2">= </span><span class="s1">asegurarMedico</span><span class="s2">(</span><span class="s1">medicoService</span><span class="s2">);</span>
+        <span class="s1">Consultorio cons  </span><span class="s2">= </span><span class="s1">asegurarConsultorio</span><span class="s2">(</span><span class="s1">consDao</span><span class="s2">);</span>
+
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;✅ Datos base: Paciente=&quot; </span><span class="s2">+ </span><span class="s1">paciente</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() + </span><span class="s4">&quot;, Medico=&quot; </span><span class="s2">+ </span><span class="s1">medico</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() + </span><span class="s4">&quot;, Consultorio=&quot; </span><span class="s2">+ </span><span class="s1">cons</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">());</span>
+
+        <span class="s3">// 2) Crear un turno para mañana a las 10:00</span>
+        <span class="s1">LocalDate fecha </span><span class="s2">= </span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">now</span><span class="s2">().</span><span class="s1">plusDays</span><span class="s2">(</span><span class="s5">1</span><span class="s2">);</span>
+        <span class="s1">LocalTime hora  </span><span class="s2">= </span><span class="s1">LocalTime</span><span class="s2">.</span><span class="s1">of</span><span class="s2">(</span><span class="s5">10</span><span class="s2">, </span><span class="s5">0</span><span class="s2">);</span>
+
+        <span class="s1">Turno t1 </span><span class="s2">= </span><span class="s1">turnoService</span><span class="s2">.</span><span class="s1">crear</span><span class="s2">(</span><span class="s1">fecha</span><span class="s2">, </span><span class="s1">hora</span><span class="s2">, </span><span class="s1">paciente</span><span class="s2">, </span><span class="s1">medico</span><span class="s2">, </span><span class="s1">cons</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;✅ Turno creado ID=&quot; </span><span class="s2">+ </span><span class="s1">t1</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() + </span><span class="s4">&quot; | costoFinal=&quot; </span><span class="s2">+ </span><span class="s1">t1</span><span class="s2">.</span><span class="s1">getCostoFinal</span><span class="s2">() + </span><span class="s4">&quot; | estado=&quot; </span><span class="s2">+ </span><span class="s1">t1</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">());</span>
+
+        <span class="s3">// 3) Intentar duplicado (mismo médico+fecha+hora) -&gt; debe fallar</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">turnoService</span><span class="s2">.</span><span class="s1">crear</span><span class="s2">(</span><span class="s1">fecha</span><span class="s2">, </span><span class="s1">hora</span><span class="s2">, </span><span class="s1">paciente</span><span class="s2">, </span><span class="s1">medico</span><span class="s2">, </span><span class="s1">cons</span><span class="s2">);</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;❌ ERROR: no debería permitir turno duplicado&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">RuntimeException ex</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;🟡 Duplicado detectado OK: &quot; </span><span class="s2">+ </span><span class="s1">ex</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">());</span>
+        <span class="s2">}</span>
+
+        <span class="s3">// 4) Cambiar estado a CONFIRMADO y luego ATENDIDO</span>
+        <span class="s1">turnoService</span><span class="s2">.</span><span class="s1">cambiarEstado</span><span class="s2">(</span><span class="s1">t1</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">CONFIRMADO</span><span class="s2">);</span>
+        <span class="s1">turnoService</span><span class="s2">.</span><span class="s1">cambiarEstado</span><span class="s2">(</span><span class="s1">t1</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">ATENDIDO</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;✅ Turno &quot; </span><span class="s2">+ </span><span class="s1">t1</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() + </span><span class="s4">&quot; marcado como ATENDIDO.&quot;</span><span class="s2">);</span>
+
+        <span class="s3">// 5) Recaudación del médico entre fechas (hoy y +3 días)</span>
+        <span class="s0">double </span><span class="s1">total </span><span class="s2">= </span><span class="s1">turnoService</span><span class="s2">.</span><span class="s1">recaudacionMedico</span><span class="s2">(</span><span class="s1">medico</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">now</span><span class="s2">(), </span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">now</span><span class="s2">().</span><span class="s1">plusDays</span><span class="s2">(</span><span class="s5">3</span><span class="s2">));</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;💰 Recaudación del médico &quot; </span><span class="s2">+ </span><span class="s1">medico</span><span class="s2">.</span><span class="s1">getApellido</span><span class="s2">() + </span><span class="s4">&quot; entre hoy y +3 días: &quot; </span><span class="s2">+ </span><span class="s1">total</span><span class="s2">);</span>
+
+        <span class="s3">// 6) Listar turnos</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Turno</span><span class="s2">&gt; </span><span class="s1">lista </span><span class="s2">= </span><span class="s1">turnoService</span><span class="s2">.</span><span class="s1">listar</span><span class="s2">();</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;📋 Turnos en sistema:&quot;</span><span class="s2">);</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Turno t </span><span class="s2">: </span><span class="s1">lista</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot; - ID=&quot; </span><span class="s2">+ </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">()</span>
+                    <span class="s2">+ </span><span class="s4">&quot; | &quot; </span><span class="s2">+ </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getFecha</span><span class="s2">() + </span><span class="s4">&quot; &quot; </span><span class="s2">+ </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getHora</span><span class="s2">()</span>
+                    <span class="s2">+ </span><span class="s4">&quot; | Med=&quot; </span><span class="s2">+ </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getMedico</span><span class="s2">().</span><span class="s1">getId</span><span class="s2">()</span>
+                    <span class="s2">+ </span><span class="s4">&quot; | Pac=&quot; </span><span class="s2">+ </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getPaciente</span><span class="s2">().</span><span class="s1">getId</span><span class="s2">()</span>
+                    <span class="s2">+ </span><span class="s4">&quot; | Cons=&quot; </span><span class="s2">+ </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getConsultorio</span><span class="s2">().</span><span class="s1">getId</span><span class="s2">()</span>
+                    <span class="s2">+ </span><span class="s4">&quot; | Estado=&quot; </span><span class="s2">+ </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">()</span>
+                    <span class="s2">+ </span><span class="s4">&quot; | $&quot; </span><span class="s2">+ </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getCostoFinal</span><span class="s2">());</span>
+        <span class="s2">}</span>
+
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;✅ Prueba de Turnos finalizada.&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static </span><span class="s1">Paciente asegurarPaciente</span><span class="s2">(</span><span class="s1">PacienteService service</span><span class="s2">) {</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Paciente</span><span class="s2">&gt; </span><span class="s1">todos </span><span class="s2">= </span><span class="s1">service</span><span class="s2">.</span><span class="s1">listar</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">todos</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) </span><span class="s0">return </span><span class="s1">todos</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s5">0</span><span class="s2">);</span>
+        <span class="s3">// crea uno de ejemplo</span>
+        <span class="s0">return </span><span class="s1">service</span><span class="s2">.</span><span class="s1">crear</span><span class="s2">(</span><span class="s4">&quot;Ana&quot;</span><span class="s2">, </span><span class="s4">&quot;García&quot;</span><span class="s2">, </span><span class="s4">&quot;TST-111&quot;</span><span class="s2">, </span><span class="s4">&quot;091111111&quot;</span><span class="s2">, </span><span class="s4">&quot;ASSE&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static </span><span class="s1">Medico asegurarMedico</span><span class="s2">(</span><span class="s1">MedicoService service</span><span class="s2">) {</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Medico</span><span class="s2">&gt; </span><span class="s1">todos </span><span class="s2">= </span><span class="s1">service</span><span class="s2">.</span><span class="s1">listar</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">todos</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) </span><span class="s0">return </span><span class="s1">todos</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s5">0</span><span class="s2">);</span>
+        <span class="s3">// crea uno de ejemplo (obra social atendida = ASSE para probar descuento)</span>
+        <span class="s0">return </span><span class="s1">service</span><span class="s2">.</span><span class="s1">crear</span><span class="s2">(</span><span class="s4">&quot;Luis&quot;</span><span class="s2">, </span><span class="s4">&quot;Pérez&quot;</span><span class="s2">, </span><span class="s1">Especialidad</span><span class="s2">.</span><span class="s1">CLINICA</span><span class="s2">, </span><span class="s5">2000.0</span><span class="s2">, </span><span class="s4">&quot;ASSE&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static </span><span class="s1">Consultorio asegurarConsultorio</span><span class="s2">(</span><span class="s1">ConsultorioDao dao</span><span class="s2">) {</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Consultorio</span><span class="s2">&gt; </span><span class="s1">todos </span><span class="s2">= </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">findAll</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">todos</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) </span><span class="s0">return </span><span class="s1">todos</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s5">0</span><span class="s2">);</span>
+        <span class="s3">// crea uno de ejemplo</span>
+        <span class="s1">Consultorio c </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Consultorio</span><span class="s2">(</span><span class="s5">0L</span><span class="s2">, </span><span class="s4">&quot;Consultorio 101&quot;</span><span class="s2">);</span>
+        <span class="s0">return </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s1">c</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

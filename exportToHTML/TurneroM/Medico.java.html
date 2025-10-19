@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>Medico.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Medico.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">TurneroM</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">Medico </span><span class="s2">{</span>
+    <span class="s0">private long </span><span class="s1">id</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">String nombre</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">String apellido</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Especialidad especialidad</span><span class="s2">;</span>
+    <span class="s0">private double </span><span class="s1">costoConsulta</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">String obraSocialAtendida</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">Medico</span><span class="s2">() { }</span>
+
+    <span class="s0">public </span><span class="s1">Medico</span><span class="s2">(</span><span class="s0">long </span><span class="s1">id</span><span class="s2">, </span><span class="s1">String nombre</span><span class="s2">, </span><span class="s1">String apellido</span><span class="s2">, </span><span class="s1">Especialidad especialidad</span><span class="s2">, </span><span class="s0">double </span><span class="s1">costoConsulta</span><span class="s2">, </span><span class="s1">String obraSocialAtendida</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">id </span><span class="s2">= </span><span class="s1">id</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">nombre </span><span class="s2">= </span><span class="s1">nombre</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">apellido </span><span class="s2">= </span><span class="s1">apellido</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">especialidad </span><span class="s2">= </span><span class="s1">especialidad</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">costoConsulta </span><span class="s2">= </span><span class="s1">costoConsulta</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">obraSocialAtendida </span><span class="s2">= </span><span class="s1">obraSocialAtendida</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public long </span><span class="s1">getId</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">id</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setId</span><span class="s2">(</span><span class="s0">long </span><span class="s1">id</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">id </span><span class="s2">= </span><span class="s1">id</span><span class="s2">; }</span>
+
+    <span class="s0">public </span><span class="s1">String getNombre</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">nombre</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setNombre</span><span class="s2">(</span><span class="s1">String nombre</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">nombre </span><span class="s2">= </span><span class="s1">nombre</span><span class="s2">; }</span>
+
+    <span class="s0">public </span><span class="s1">String getApellido</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">apellido</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setApellido</span><span class="s2">(</span><span class="s1">String apellido</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">apellido </span><span class="s2">= </span><span class="s1">apellido</span><span class="s2">; }</span>
+
+    <span class="s0">public </span><span class="s1">Especialidad getEspecialidad</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">especialidad</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setEspecialidad</span><span class="s2">(</span><span class="s1">Especialidad especialidad</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">especialidad </span><span class="s2">= </span><span class="s1">especialidad</span><span class="s2">; }</span>
+
+    <span class="s0">public double </span><span class="s1">getCostoConsulta</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">costoConsulta</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setCostoConsulta</span><span class="s2">(</span><span class="s0">double </span><span class="s1">costoConsulta</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">costoConsulta </span><span class="s2">= </span><span class="s1">costoConsulta</span><span class="s2">; }</span>
+
+    <span class="s0">public </span><span class="s1">String getObraSocialAtendida</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">obraSocialAtendida</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setObraSocialAtendida</span><span class="s2">(</span><span class="s1">String obraSocialAtendida</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">obraSocialAtendida </span><span class="s2">= </span><span class="s1">obraSocialAtendida</span><span class="s2">; }</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">String toString</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">nombre </span><span class="s2">+ </span><span class="s3">&quot; &quot; </span><span class="s2">+ </span><span class="s1">apellido </span><span class="s2">+ </span><span class="s3">&quot; - &quot; </span><span class="s2">+ </span><span class="s1">especialidad </span><span class="s2">+ </span><span class="s3">&quot; ($&quot; </span><span class="s2">+ </span><span class="s1">costoConsulta </span><span class="s2">+ </span><span class="s3">&quot;)&quot;</span><span class="s2">;</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

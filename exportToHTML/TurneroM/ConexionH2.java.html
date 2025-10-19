@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>ConexionH2.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ConexionH2.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">TurneroM</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">sql</span><span class="s2">.</span><span class="s1">Connection</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">sql</span><span class="s2">.</span><span class="s1">DriverManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">sql</span><span class="s2">.</span><span class="s1">SQLException</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">ConexionH2 </span><span class="s2">{</span>
+
+    <span class="s0">private static final </span><span class="s1">String URL </span><span class="s2">= </span><span class="s3">&quot;jdbc:h2:~/mi_base&quot;</span><span class="s2">;</span>
+    <span class="s0">private static final </span><span class="s1">String USER </span><span class="s2">= </span><span class="s3">&quot;sa&quot;</span><span class="s2">;</span>
+    <span class="s0">private static final </span><span class="s1">String PASS </span><span class="s2">= </span><span class="s3">&quot;&quot;</span><span class="s2">;</span>
+
+    <span class="s0">static </span><span class="s2">{</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">Class</span><span class="s2">.</span><span class="s1">forName</span><span class="s2">(</span><span class="s3">&quot;org.h2.Driver&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">ClassNotFoundException e</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;No se encontró el driver H2&quot;</span><span class="s2">, </span><span class="s1">e</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public static </span><span class="s1">Connection getConnection</span><span class="s2">() {</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s0">return </span><span class="s1">DriverManager</span><span class="s2">.</span><span class="s1">getConnection</span><span class="s2">(</span><span class="s1">URL</span><span class="s2">, </span><span class="s1">USER</span><span class="s2">, </span><span class="s1">PASS</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">SQLException e</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Error conectando a H2: &quot; </span><span class="s2">+ </span><span class="s1">e</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">(), </span><span class="s1">e</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

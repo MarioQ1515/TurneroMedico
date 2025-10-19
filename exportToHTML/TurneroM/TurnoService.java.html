@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>TurnoService.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+TurnoService.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">TurneroM</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">time</span><span class="s2">.</span><span class="s1">LocalDate</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">time</span><span class="s2">.</span><span class="s1">LocalTime</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">TurnoService </span><span class="s2">{</span>
+    <span class="s0">private final </span><span class="s1">TurnoDao dao</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">TurnoService</span><span class="s2">(</span><span class="s1">TurnoDao dao</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">dao </span><span class="s2">= </span><span class="s1">dao</span><span class="s2">; }</span>
+
+    <span class="s0">public </span><span class="s1">Turno crear</span><span class="s2">(</span><span class="s1">LocalDate fecha</span><span class="s2">, </span><span class="s1">LocalTime hora</span><span class="s2">, </span><span class="s1">Paciente pac</span><span class="s2">, </span><span class="s1">Medico med</span><span class="s2">, </span><span class="s1">Consultorio cons</span><span class="s2">) {</span>
+        <span class="s1">validarCampos</span><span class="s2">(</span><span class="s1">fecha</span><span class="s2">, </span><span class="s1">hora</span><span class="s2">, </span><span class="s1">pac</span><span class="s2">, </span><span class="s1">med</span><span class="s2">, </span><span class="s1">cons</span><span class="s2">);</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">dao</span><span class="s2">.</span><span class="s1">existsByMedicoAndFechaHora</span><span class="s2">(</span><span class="s1">med</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">fecha</span><span class="s2">, </span><span class="s1">hora</span><span class="s2">)) {</span>
+            <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;El médico ya tiene un turno en esa fecha y hora&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s0">double </span><span class="s1">costo </span><span class="s2">= </span><span class="s1">calcularCostoFinal</span><span class="s2">(</span><span class="s1">med</span><span class="s2">, </span><span class="s1">pac</span><span class="s2">);</span>
+        <span class="s1">Turno t </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Turno</span><span class="s2">(</span><span class="s4">0L</span><span class="s2">, </span><span class="s1">fecha</span><span class="s2">, </span><span class="s1">hora</span><span class="s2">, </span><span class="s1">pac</span><span class="s2">, </span><span class="s1">med</span><span class="s2">, </span><span class="s1">cons</span><span class="s2">, </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">RESERVADO</span><span class="s2">, </span><span class="s1">costo</span><span class="s2">);</span>
+        <span class="s0">return </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">insert</span><span class="s2">(</span><span class="s1">t</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">Turno actualizar</span><span class="s2">(</span><span class="s0">long </span><span class="s1">id</span><span class="s2">, </span><span class="s1">LocalDate fecha</span><span class="s2">, </span><span class="s1">LocalTime hora</span><span class="s2">, </span><span class="s1">Paciente pac</span><span class="s2">, </span><span class="s1">Medico med</span><span class="s2">, </span><span class="s1">Consultorio cons</span><span class="s2">, </span><span class="s1">EstadoTurno estado</span><span class="s2">) {</span>
+        <span class="s1">validarCampos</span><span class="s2">(</span><span class="s1">fecha</span><span class="s2">, </span><span class="s1">hora</span><span class="s2">, </span><span class="s1">pac</span><span class="s2">, </span><span class="s1">med</span><span class="s2">, </span><span class="s1">cons</span><span class="s2">);</span>
+        <span class="s1">Turno actual </span><span class="s2">= </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">findById</span><span class="s2">(</span><span class="s1">id</span><span class="s2">).</span><span class="s1">orElseThrow</span><span class="s2">(() </span><span class="s1">-&gt; </span><span class="s0">new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Turno no encontrado&quot;</span><span class="s2">));</span>
+
+        <span class="s5">// Si cambian fecha/hora/médico, validar solapamiento</span>
+        <span class="s0">boolean </span><span class="s1">medicoCambia </span><span class="s2">= </span><span class="s1">actual</span><span class="s2">.</span><span class="s1">getMedico</span><span class="s2">().</span><span class="s1">getId</span><span class="s2">() != </span><span class="s1">med</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">();</span>
+        <span class="s0">boolean </span><span class="s1">fechaCambia  </span><span class="s2">= !</span><span class="s1">actual</span><span class="s2">.</span><span class="s1">getFecha</span><span class="s2">().</span><span class="s1">equals</span><span class="s2">(</span><span class="s1">fecha</span><span class="s2">);</span>
+        <span class="s0">boolean </span><span class="s1">horaCambia   </span><span class="s2">= !</span><span class="s1">actual</span><span class="s2">.</span><span class="s1">getHora</span><span class="s2">().</span><span class="s1">equals</span><span class="s2">(</span><span class="s1">hora</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">medicoCambia </span><span class="s2">|| </span><span class="s1">fechaCambia </span><span class="s2">|| </span><span class="s1">horaCambia</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">dao</span><span class="s2">.</span><span class="s1">existsByMedicoAndFechaHora</span><span class="s2">(</span><span class="s1">med</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">fecha</span><span class="s2">, </span><span class="s1">hora</span><span class="s2">)) {</span>
+                <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;El médico ya tiene un turno en esa fecha y hora&quot;</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+
+        <span class="s1">actual</span><span class="s2">.</span><span class="s1">setFecha</span><span class="s2">(</span><span class="s1">fecha</span><span class="s2">);</span>
+        <span class="s1">actual</span><span class="s2">.</span><span class="s1">setHora</span><span class="s2">(</span><span class="s1">hora</span><span class="s2">);</span>
+        <span class="s1">actual</span><span class="s2">.</span><span class="s1">setPaciente</span><span class="s2">(</span><span class="s1">pac</span><span class="s2">);</span>
+        <span class="s1">actual</span><span class="s2">.</span><span class="s1">setMedico</span><span class="s2">(</span><span class="s1">med</span><span class="s2">);</span>
+        <span class="s1">actual</span><span class="s2">.</span><span class="s1">setConsultorio</span><span class="s2">(</span><span class="s1">cons</span><span class="s2">);</span>
+        <span class="s1">actual</span><span class="s2">.</span><span class="s1">setEstado</span><span class="s2">(</span><span class="s1">estado </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">? </span><span class="s1">estado </span><span class="s2">: </span><span class="s1">actual</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">());</span>
+        <span class="s1">actual</span><span class="s2">.</span><span class="s1">setCostoFinal</span><span class="s2">(</span><span class="s1">calcularCostoFinal</span><span class="s2">(</span><span class="s1">med</span><span class="s2">, </span><span class="s1">pac</span><span class="s2">));</span>
+        <span class="s0">return </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">update</span><span class="s2">(</span><span class="s1">actual</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">cambiarEstado</span><span class="s2">(</span><span class="s0">long </span><span class="s1">turnoId</span><span class="s2">, </span><span class="s1">EstadoTurno nuevoEstado</span><span class="s2">) {</span>
+        <span class="s1">Turno t </span><span class="s2">= </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">findById</span><span class="s2">(</span><span class="s1">turnoId</span><span class="s2">).</span><span class="s1">orElseThrow</span><span class="s2">(() </span><span class="s1">-&gt; </span><span class="s0">new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Turno no encontrado&quot;</span><span class="s2">));</span>
+        <span class="s1">t</span><span class="s2">.</span><span class="s1">setEstado</span><span class="s2">(</span><span class="s1">nuevoEstado</span><span class="s2">);</span>
+        <span class="s1">dao</span><span class="s2">.</span><span class="s1">update</span><span class="s2">(</span><span class="s1">t</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">eliminar</span><span class="s2">(</span><span class="s0">long </span><span class="s1">id</span><span class="s2">) {</span>
+        <span class="s1">dao</span><span class="s2">.</span><span class="s1">findById</span><span class="s2">(</span><span class="s1">id</span><span class="s2">).</span><span class="s1">orElseThrow</span><span class="s2">(() </span><span class="s1">-&gt; </span><span class="s0">new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Turno no encontrado&quot;</span><span class="s2">));</span>
+        <span class="s1">dao</span><span class="s2">.</span><span class="s1">deleteById</span><span class="s2">(</span><span class="s1">id</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Turno</span><span class="s2">&gt; </span><span class="s1">listar</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">findAll</span><span class="s2">(); }</span>
+
+    <span class="s0">public double </span><span class="s1">recaudacionMedico</span><span class="s2">(</span><span class="s0">long </span><span class="s1">medicoId</span><span class="s2">, </span><span class="s1">LocalDate desde</span><span class="s2">, </span><span class="s1">LocalDate hasta</span><span class="s2">) {</span>
+        <span class="s0">double </span><span class="s1">total </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Turno t </span><span class="s2">: </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">findByMedicoBetween</span><span class="s2">(</span><span class="s1">medicoId</span><span class="s2">, </span><span class="s1">desde</span><span class="s2">, </span><span class="s1">hasta</span><span class="s2">)) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">t</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">() == </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">ATENDIDO </span><span class="s2">|| </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">() == </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">CONFIRMADO</span><span class="s2">) {</span>
+                <span class="s1">total </span><span class="s2">+= </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getCostoFinal</span><span class="s2">();</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">total</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s5">// ---------- helpers ----------</span>
+    <span class="s0">private void </span><span class="s1">validarCampos</span><span class="s2">(</span><span class="s1">LocalDate fecha</span><span class="s2">, </span><span class="s1">LocalTime hora</span><span class="s2">, </span><span class="s1">Paciente pac</span><span class="s2">, </span><span class="s1">Medico med</span><span class="s2">, </span><span class="s1">Consultorio cons</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">fecha </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Fecha obligatoria&quot;</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">hora </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Hora obligatoria&quot;</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">pac </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">pac</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() == </span><span class="s4">0</span><span class="s2">) </span><span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Paciente obligatorio&quot;</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">med </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">med</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() == </span><span class="s4">0</span><span class="s2">) </span><span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Médico obligatorio&quot;</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">cons </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">cons</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() == </span><span class="s4">0</span><span class="s2">) </span><span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Consultorio obligatorio&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private double </span><span class="s1">calcularCostoFinal</span><span class="s2">(</span><span class="s1">Medico med</span><span class="s2">, </span><span class="s1">Paciente pac</span><span class="s2">) {</span>
+        <span class="s1">String obraPac </span><span class="s2">= </span><span class="s1">pac</span><span class="s2">.</span><span class="s1">getObraSocial</span><span class="s2">();</span>
+        <span class="s1">String obraMed </span><span class="s2">= </span><span class="s1">med</span><span class="s2">.</span><span class="s1">getObraSocialAtendida</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">obraPac </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp;&amp; </span><span class="s1">obraMed </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp;&amp; </span><span class="s1">obraPac</span><span class="s2">.</span><span class="s1">trim</span><span class="s2">().</span><span class="s1">equalsIgnoreCase</span><span class="s2">(</span><span class="s1">obraMed</span><span class="s2">.</span><span class="s1">trim</span><span class="s2">())) {</span>
+            <span class="s0">return </span><span class="s1">med</span><span class="s2">.</span><span class="s1">getCostoConsulta</span><span class="s2">() * </span><span class="s4">0.5</span><span class="s2">; </span><span class="s5">// descuento 50%</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">med</span><span class="s2">.</span><span class="s1">getCostoConsulta</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">ReporteRecaudacionMedico reporteRecaudacionMedico</span><span class="s2">(</span><span class="s0">long </span><span class="s1">medicoId</span><span class="s2">, </span><span class="s1">LocalDate desde</span><span class="s2">, </span><span class="s1">LocalDate hasta</span><span class="s2">) {</span>
+        <span class="s0">int </span><span class="s1">cantidad </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s0">double </span><span class="s1">total </span><span class="s2">= </span><span class="s4">0.0</span><span class="s2">;</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Turno t </span><span class="s2">: </span><span class="s1">dao</span><span class="s2">.</span><span class="s1">findByMedicoBetween</span><span class="s2">(</span><span class="s1">medicoId</span><span class="s2">, </span><span class="s1">desde</span><span class="s2">, </span><span class="s1">hasta</span><span class="s2">)) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">t</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">() == </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">CONFIRMADO </span><span class="s2">|| </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">() == </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">ATENDIDO</span><span class="s2">) {</span>
+                <span class="s1">cantidad</span><span class="s2">++;</span>
+                <span class="s1">total </span><span class="s2">+= </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getCostoFinal</span><span class="s2">();</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">return new </span><span class="s1">ReporteRecaudacionMedico</span><span class="s2">(</span><span class="s1">medicoId</span><span class="s2">, </span><span class="s1">desde</span><span class="s2">, </span><span class="s1">hasta</span><span class="s2">, </span><span class="s1">cantidad</span><span class="s2">, </span><span class="s1">total</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+<span class="s2">}</span></pre>
+</body>
+</html>

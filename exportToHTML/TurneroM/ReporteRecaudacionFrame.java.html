@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>ReporteRecaudacionFrame.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ReporteRecaudacionFrame.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">TurneroM</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">time</span><span class="s2">.</span><span class="s1">LocalDate</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">ReporteRecaudacionFrame </span><span class="s0">extends </span><span class="s1">JFrame </span><span class="s2">{</span>
+
+    <span class="s0">private final </span><span class="s1">MedicoService medicoService </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MedicoService</span><span class="s2">(</span><span class="s0">new </span><span class="s1">H2MedicoDao</span><span class="s2">());</span>
+    <span class="s0">private final </span><span class="s1">TurnoService turnoService   </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TurnoService</span><span class="s2">(</span><span class="s0">new </span><span class="s1">H2TurnoDao</span><span class="s2">());</span>
+
+    <span class="s0">private final </span><span class="s1">JComboBox</span><span class="s2">&lt;</span><span class="s1">Medico</span><span class="s2">&gt; </span><span class="s1">cbMedico </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JComboBox</span><span class="s2">&lt;&gt;();</span>
+    <span class="s0">private final </span><span class="s1">JTextField tfDesde </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JTextField</span><span class="s2">(</span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">now</span><span class="s2">().</span><span class="s1">minusDays</span><span class="s2">(</span><span class="s3">7</span><span class="s2">).</span><span class="s1">toString</span><span class="s2">());</span>
+    <span class="s0">private final </span><span class="s1">JTextField tfHasta </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JTextField</span><span class="s2">(</span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">now</span><span class="s2">().</span><span class="s1">toString</span><span class="s2">());</span>
+    <span class="s0">private final </span><span class="s1">JLabel lblCantidad </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;-&quot;</span><span class="s2">);</span>
+    <span class="s0">private final </span><span class="s1">JLabel lblTotal </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;-&quot;</span><span class="s2">);</span>
+
+    <span class="s0">public </span><span class="s1">ReporteRecaudacionFrame</span><span class="s2">() {</span>
+        <span class="s1">setTitle</span><span class="s2">(</span><span class="s4">&quot;Reporte: Recaudación por Médico&quot;</span><span class="s2">);</span>
+        <span class="s1">setSize</span><span class="s2">(</span><span class="s3">480</span><span class="s2">, </span><span class="s3">240</span><span class="s2">);</span>
+        <span class="s1">setLocationRelativeTo</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s1">setDefaultCloseOperation</span><span class="s2">(</span><span class="s1">DISPOSE_ON_CLOSE</span><span class="s2">);</span>
+
+        <span class="s5">// top: filtros</span>
+        <span class="s1">JPanel filtros </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">GridLayout</span><span class="s2">(</span><span class="s3">0</span><span class="s2">,</span><span class="s3">2</span><span class="s2">,</span><span class="s3">8</span><span class="s2">,</span><span class="s3">8</span><span class="s2">));</span>
+        <span class="s1">filtros</span><span class="s2">.</span><span class="s1">setBorder</span><span class="s2">(</span><span class="s1">BorderFactory</span><span class="s2">.</span><span class="s1">createEmptyBorder</span><span class="s2">(</span><span class="s3">12</span><span class="s2">,</span><span class="s3">12</span><span class="s2">,</span><span class="s3">12</span><span class="s2">,</span><span class="s3">12</span><span class="s2">));</span>
+        <span class="s1">filtros</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Médico:&quot;</span><span class="s2">)); </span><span class="s1">filtros</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">cbMedico</span><span class="s2">);</span>
+        <span class="s1">filtros</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Desde (YYYY-MM-DD):&quot;</span><span class="s2">)); </span><span class="s1">filtros</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">tfDesde</span><span class="s2">);</span>
+        <span class="s1">filtros</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Hasta (YYYY-MM-DD):&quot;</span><span class="s2">)); </span><span class="s1">filtros</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">tfHasta</span><span class="s2">);</span>
+
+        <span class="s5">// middle: resultados</span>
+        <span class="s1">JPanel resultados </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">GridLayout</span><span class="s2">(</span><span class="s3">1</span><span class="s2">,</span><span class="s3">4</span><span class="s2">,</span><span class="s3">10</span><span class="s2">,</span><span class="s3">10</span><span class="s2">));</span>
+        <span class="s1">resultados</span><span class="s2">.</span><span class="s1">setBorder</span><span class="s2">(</span><span class="s1">BorderFactory</span><span class="s2">.</span><span class="s1">createEmptyBorder</span><span class="s2">(</span><span class="s3">0</span><span class="s2">,</span><span class="s3">12</span><span class="s2">,</span><span class="s3">12</span><span class="s2">,</span><span class="s3">12</span><span class="s2">));</span>
+        <span class="s1">resultados</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Cantidad:&quot;</span><span class="s2">));</span>
+        <span class="s1">resultados</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">lblCantidad</span><span class="s2">);</span>
+        <span class="s1">resultados</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Total $:&quot;</span><span class="s2">));</span>
+        <span class="s1">resultados</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">lblTotal</span><span class="s2">);</span>
+
+        <span class="s5">// bottom: acciones</span>
+        <span class="s1">JPanel acciones </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">FlowLayout</span><span class="s2">(</span><span class="s1">FlowLayout</span><span class="s2">.</span><span class="s1">RIGHT</span><span class="s2">));</span>
+        <span class="s1">JButton btnCalcular </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s4">&quot;Calcular&quot;</span><span class="s2">);</span>
+        <span class="s1">JButton btnListar   </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s4">&quot;Ver turnos…&quot;</span><span class="s2">);</span>
+        <span class="s1">acciones</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnCalcular</span><span class="s2">);</span>
+        <span class="s1">acciones</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnListar</span><span class="s2">);</span>
+
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">filtros</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">NORTH</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">resultados</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">acciones</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">SOUTH</span><span class="s2">);</span>
+
+        <span class="s5">// cargar médicos</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Medico m </span><span class="s2">: </span><span class="s1">medicoService</span><span class="s2">.</span><span class="s1">listar</span><span class="s2">()) </span><span class="s1">cbMedico</span><span class="s2">.</span><span class="s1">addItem</span><span class="s2">(</span><span class="s1">m</span><span class="s2">);</span>
+
+        <span class="s5">// acciones</span>
+        <span class="s1">btnCalcular</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; calcular</span><span class="s2">());</span>
+        <span class="s1">btnListar</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; listarTurnosPagables</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">calcular</span><span class="s2">() {</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">Medico med </span><span class="s2">= (</span><span class="s1">Medico</span><span class="s2">) </span><span class="s1">cbMedico</span><span class="s2">.</span><span class="s1">getSelectedItem</span><span class="s2">();</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">med </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) { </span><span class="s1">warn</span><span class="s2">(</span><span class="s4">&quot;Seleccione un médico.&quot;</span><span class="s2">); </span><span class="s0">return</span><span class="s2">; }</span>
+            <span class="s1">LocalDate desde </span><span class="s2">= </span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">parse</span><span class="s2">(</span><span class="s1">tfDesde</span><span class="s2">.</span><span class="s1">getText</span><span class="s2">().</span><span class="s1">trim</span><span class="s2">());</span>
+            <span class="s1">LocalDate hasta </span><span class="s2">= </span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">parse</span><span class="s2">(</span><span class="s1">tfHasta</span><span class="s2">.</span><span class="s1">getText</span><span class="s2">().</span><span class="s1">trim</span><span class="s2">());</span>
+
+            <span class="s1">ReporteRecaudacionMedico r </span><span class="s2">= </span><span class="s1">turnoService</span><span class="s2">.</span><span class="s1">reporteRecaudacionMedico</span><span class="s2">(</span><span class="s1">med</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">desde</span><span class="s2">, </span><span class="s1">hasta</span><span class="s2">);</span>
+            <span class="s1">lblCantidad</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">r</span><span class="s2">.</span><span class="s1">getCantidadTurnos</span><span class="s2">()));</span>
+            <span class="s1">lblTotal</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s4">&quot;%.2f&quot;</span><span class="s2">, </span><span class="s1">r</span><span class="s2">.</span><span class="s1">getTotalCobrado</span><span class="s2">()));</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception ex</span><span class="s2">) {</span>
+            <span class="s1">error</span><span class="s2">(</span><span class="s4">&quot;Revisá médico y fechas. &quot; </span><span class="s2">+ </span><span class="s1">ex</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">());</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s5">// opcional: mostrar los turnos pagables (CONFIRMADO/ATENDIDO)</span>
+    <span class="s0">private void </span><span class="s1">listarTurnosPagables</span><span class="s2">() {</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">Medico med </span><span class="s2">= (</span><span class="s1">Medico</span><span class="s2">) </span><span class="s1">cbMedico</span><span class="s2">.</span><span class="s1">getSelectedItem</span><span class="s2">();</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">med </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) { </span><span class="s1">warn</span><span class="s2">(</span><span class="s4">&quot;Seleccione un médico.&quot;</span><span class="s2">); </span><span class="s0">return</span><span class="s2">; }</span>
+            <span class="s1">LocalDate desde </span><span class="s2">= </span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">parse</span><span class="s2">(</span><span class="s1">tfDesde</span><span class="s2">.</span><span class="s1">getText</span><span class="s2">().</span><span class="s1">trim</span><span class="s2">());</span>
+            <span class="s1">LocalDate hasta </span><span class="s2">= </span><span class="s1">LocalDate</span><span class="s2">.</span><span class="s1">parse</span><span class="s2">(</span><span class="s1">tfHasta</span><span class="s2">.</span><span class="s1">getText</span><span class="s2">().</span><span class="s1">trim</span><span class="s2">());</span>
+            <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Turno</span><span class="s2">&gt; </span><span class="s1">todos </span><span class="s2">= </span><span class="s0">new </span><span class="s1">H2TurnoDao</span><span class="s2">().</span><span class="s1">findByMedicoBetween</span><span class="s2">(</span><span class="s1">med</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">desde</span><span class="s2">, </span><span class="s1">hasta</span><span class="s2">);</span>
+
+            <span class="s1">StringBuilder sb </span><span class="s2">= </span><span class="s0">new </span><span class="s1">StringBuilder</span><span class="s2">(</span><span class="s4">&quot;Turnos pagables (CONFIRMADO/ATENDIDO):</span><span class="s0">\n\n</span><span class="s4">&quot;</span><span class="s2">);</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s1">Turno t </span><span class="s2">: </span><span class="s1">todos</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">t</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">() == </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">CONFIRMADO </span><span class="s2">|| </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">() == </span><span class="s1">EstadoTurno</span><span class="s2">.</span><span class="s1">ATENDIDO</span><span class="s2">) {</span>
+                    <span class="s1">sb</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s4">&quot;#%d  %s %s  $%.2f  (%s)</span><span class="s0">\n</span><span class="s4">&quot;</span><span class="s2">,</span>
+                            <span class="s1">t</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getFecha</span><span class="s2">(), </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getHora</span><span class="s2">(), </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getCostoFinal</span><span class="s2">(), </span><span class="s1">t</span><span class="s2">.</span><span class="s1">getEstado</span><span class="s2">()));</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+            <span class="s1">JTextArea area </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JTextArea</span><span class="s2">(</span><span class="s1">sb</span><span class="s2">.</span><span class="s1">toString</span><span class="s2">(), </span><span class="s3">18</span><span class="s2">, </span><span class="s3">50</span><span class="s2">);</span>
+            <span class="s1">area</span><span class="s2">.</span><span class="s1">setEditable</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+            <span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showMessageDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s0">new </span><span class="s1">JScrollPane</span><span class="s2">(</span><span class="s1">area</span><span class="s2">), </span><span class="s4">&quot;Detalle de turnos&quot;</span><span class="s2">, </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">INFORMATION_MESSAGE</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception ex</span><span class="s2">) {</span>
+            <span class="s1">error</span><span class="s2">(</span><span class="s4">&quot;Revisá médico y fechas. &quot; </span><span class="s2">+ </span><span class="s1">ex</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">());</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">warn</span><span class="s2">(</span><span class="s1">String m</span><span class="s2">){ </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showMessageDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">m</span><span class="s2">, </span><span class="s4">&quot;Atención&quot;</span><span class="s2">, </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">WARNING_MESSAGE</span><span class="s2">); }</span>
+    <span class="s0">private void </span><span class="s1">error</span><span class="s2">(</span><span class="s1">String m</span><span class="s2">){ </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showMessageDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">m</span><span class="s2">, </span><span class="s4">&quot;Error&quot;</span><span class="s2">, </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">ERROR_MESSAGE</span><span class="s2">); }</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<html>
+<head>
+<title>MedicoFrame.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MedicoFrame.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">TurneroM</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.</span><span class="s1">table</span><span class="s2">.</span><span class="s1">DefaultTableModel</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">MedicoFrame </span><span class="s0">extends </span><span class="s1">JFrame </span><span class="s2">{</span>
+
+    <span class="s0">private final </span><span class="s1">MedicoService service</span><span class="s2">;</span>
+    <span class="s0">private final </span><span class="s1">DefaultTableModel model</span><span class="s2">;</span>
+    <span class="s0">private final </span><span class="s1">JTable tabla</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">MedicoFrame</span><span class="s2">() {</span>
+        <span class="s1">setTitle</span><span class="s2">(</span><span class="s3">&quot;Turnero Médico – Médicos&quot;</span><span class="s2">);</span>
+        <span class="s1">setSize</span><span class="s2">(</span><span class="s4">850</span><span class="s2">, </span><span class="s4">450</span><span class="s2">);</span>
+        <span class="s1">setLocationRelativeTo</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s1">setDefaultCloseOperation</span><span class="s2">(</span><span class="s1">JFrame</span><span class="s2">.</span><span class="s1">DISPOSE_ON_CLOSE</span><span class="s2">);</span>
+
+        <span class="s1">service </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MedicoService</span><span class="s2">(</span><span class="s0">new </span><span class="s1">H2MedicoDao</span><span class="s2">());</span>
+
+        <span class="s1">model </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DefaultTableModel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Object</span><span class="s2">[]{</span>
+                <span class="s3">&quot;ID&quot;</span><span class="s2">, </span><span class="s3">&quot;Nombre&quot;</span><span class="s2">, </span><span class="s3">&quot;Apellido&quot;</span><span class="s2">, </span><span class="s3">&quot;Especialidad&quot;</span><span class="s2">, </span><span class="s3">&quot;Costo&quot;</span><span class="s2">, </span><span class="s3">&quot;Obra Social Atendida&quot;</span>
+        <span class="s2">}, </span><span class="s4">0</span><span class="s2">) { </span><span class="s0">public boolean </span><span class="s1">isCellEditable</span><span class="s2">(</span><span class="s0">int </span><span class="s1">r</span><span class="s2">, </span><span class="s0">int </span><span class="s1">c</span><span class="s2">) { </span><span class="s0">return false</span><span class="s2">; }};</span>
+
+        <span class="s1">tabla </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JTable</span><span class="s2">(</span><span class="s1">model</span><span class="s2">);</span>
+        <span class="s1">tabla</span><span class="s2">.</span><span class="s1">setSelectionMode</span><span class="s2">(</span><span class="s1">ListSelectionModel</span><span class="s2">.</span><span class="s1">SINGLE_SELECTION</span><span class="s2">);</span>
+
+        <span class="s1">JPanel barra </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">FlowLayout</span><span class="s2">(</span><span class="s1">FlowLayout</span><span class="s2">.</span><span class="s1">LEFT</span><span class="s2">));</span>
+        <span class="s1">JButton btnNuevo </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s3">&quot;Nuevo&quot;</span><span class="s2">);</span>
+        <span class="s1">JButton btnEditar </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s3">&quot;Editar&quot;</span><span class="s2">);</span>
+        <span class="s1">JButton btnEliminar </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s3">&quot;Eliminar&quot;</span><span class="s2">);</span>
+        <span class="s1">JButton btnRefrescar </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JButton</span><span class="s2">(</span><span class="s3">&quot;Refrescar&quot;</span><span class="s2">);</span>
+        <span class="s1">barra</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnNuevo</span><span class="s2">); </span><span class="s1">barra</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnEditar</span><span class="s2">); </span><span class="s1">barra</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnEliminar</span><span class="s2">); </span><span class="s1">barra</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnRefrescar</span><span class="s2">);</span>
+
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">barra</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">NORTH</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">JScrollPane</span><span class="s2">(</span><span class="s1">tabla</span><span class="s2">), </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s1">btnRefrescar</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; cargarTabla</span><span class="s2">());</span>
+        <span class="s1">btnNuevo</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; crearMedico</span><span class="s2">());</span>
+        <span class="s1">btnEditar</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; editarSeleccionado</span><span class="s2">());</span>
+        <span class="s1">btnEliminar</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; eliminarSeleccionado</span><span class="s2">());</span>
+
+        <span class="s1">cargarTabla</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">cargarTabla</span><span class="s2">() {</span>
+        <span class="s1">model</span><span class="s2">.</span><span class="s1">setRowCount</span><span class="s2">(</span><span class="s4">0</span><span class="s2">);</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Medico</span><span class="s2">&gt; </span><span class="s1">lista </span><span class="s2">= </span><span class="s1">service</span><span class="s2">.</span><span class="s1">listar</span><span class="s2">();</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s1">Medico m </span><span class="s2">: </span><span class="s1">lista</span><span class="s2">) {</span>
+                <span class="s1">model</span><span class="s2">.</span><span class="s1">addRow</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Object</span><span class="s2">[]{</span>
+                        <span class="s1">m</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">m</span><span class="s2">.</span><span class="s1">getNombre</span><span class="s2">(), </span><span class="s1">m</span><span class="s2">.</span><span class="s1">getApellido</span><span class="s2">(),</span>
+                        <span class="s1">m</span><span class="s2">.</span><span class="s1">getEspecialidad</span><span class="s2">(), </span><span class="s1">m</span><span class="s2">.</span><span class="s1">getCostoConsulta</span><span class="s2">(), </span><span class="s1">m</span><span class="s2">.</span><span class="s1">getObraSocialAtendida</span><span class="s2">()</span>
+                <span class="s2">});</span>
+            <span class="s2">}</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">RuntimeException ex</span><span class="s2">) {</span>
+            <span class="s1">showError</span><span class="s2">(</span><span class="s1">ex</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">());</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">crearMedico</span><span class="s2">() {</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">String nombre </span><span class="s2">= </span><span class="s1">input</span><span class="s2">(</span><span class="s3">&quot;Nombre:&quot;</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">nombre </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+            <span class="s1">String apellido </span><span class="s2">= </span><span class="s1">input</span><span class="s2">(</span><span class="s3">&quot;Apellido:&quot;</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">apellido </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+            <span class="s1">Especialidad esp </span><span class="s2">= </span><span class="s1">inputEspecialidad</span><span class="s2">(); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">esp </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+            <span class="s1">Double costo </span><span class="s2">= </span><span class="s1">inputDouble</span><span class="s2">(</span><span class="s3">&quot;Costo consulta:&quot;</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">costo </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+            <span class="s1">String obra </span><span class="s2">= </span><span class="s1">input</span><span class="s2">(</span><span class="s3">&quot;Obra Social atendida (opcional):&quot;</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">obra </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+
+            <span class="s1">service</span><span class="s2">.</span><span class="s1">crear</span><span class="s2">(</span><span class="s1">nombre</span><span class="s2">, </span><span class="s1">apellido</span><span class="s2">, </span><span class="s1">esp</span><span class="s2">, </span><span class="s1">costo</span><span class="s2">, </span><span class="s1">obra</span><span class="s2">);</span>
+            <span class="s1">cargarTabla</span><span class="s2">(); </span><span class="s1">showInfo</span><span class="s2">(</span><span class="s3">&quot;Médico creado.&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">RuntimeException ex</span><span class="s2">) { </span><span class="s1">showError</span><span class="s2">(</span><span class="s1">ex</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">()); }</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">editarSeleccionado</span><span class="s2">() {</span>
+        <span class="s0">int </span><span class="s1">row </span><span class="s2">= </span><span class="s1">tabla</span><span class="s2">.</span><span class="s1">getSelectedRow</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">row </span><span class="s2">== -</span><span class="s4">1</span><span class="s2">) { </span><span class="s1">showWarn</span><span class="s2">(</span><span class="s3">&quot;Seleccione un médico.&quot;</span><span class="s2">); </span><span class="s0">return</span><span class="s2">; }</span>
+
+        <span class="s0">long </span><span class="s1">id </span><span class="s2">= </span><span class="s1">Long</span><span class="s2">.</span><span class="s1">parseLong</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">model</span><span class="s2">.</span><span class="s1">getValueAt</span><span class="s2">(</span><span class="s1">row</span><span class="s2">, </span><span class="s4">0</span><span class="s2">)));</span>
+        <span class="s1">String nombreA </span><span class="s2">= </span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">model</span><span class="s2">.</span><span class="s1">getValueAt</span><span class="s2">(</span><span class="s1">row</span><span class="s2">, </span><span class="s4">1</span><span class="s2">));</span>
+        <span class="s1">String apellidoA </span><span class="s2">= </span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">model</span><span class="s2">.</span><span class="s1">getValueAt</span><span class="s2">(</span><span class="s1">row</span><span class="s2">, </span><span class="s4">2</span><span class="s2">));</span>
+        <span class="s1">Especialidad espA </span><span class="s2">= </span><span class="s1">Especialidad</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">model</span><span class="s2">.</span><span class="s1">getValueAt</span><span class="s2">(</span><span class="s1">row</span><span class="s2">, </span><span class="s4">3</span><span class="s2">)));</span>
+        <span class="s0">double </span><span class="s1">costoA </span><span class="s2">= </span><span class="s1">Double</span><span class="s2">.</span><span class="s1">parseDouble</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">model</span><span class="s2">.</span><span class="s1">getValueAt</span><span class="s2">(</span><span class="s1">row</span><span class="s2">, </span><span class="s4">4</span><span class="s2">)));</span>
+        <span class="s1">String obraA </span><span class="s2">= </span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">model</span><span class="s2">.</span><span class="s1">getValueAt</span><span class="s2">(</span><span class="s1">row</span><span class="s2">, </span><span class="s4">5</span><span class="s2">));</span>
+
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">String nombre </span><span class="s2">= </span><span class="s1">inputDefault</span><span class="s2">(</span><span class="s3">&quot;Nombre:&quot;</span><span class="s2">, </span><span class="s1">nombreA</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">nombre </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+            <span class="s1">String apellido </span><span class="s2">= </span><span class="s1">inputDefault</span><span class="s2">(</span><span class="s3">&quot;Apellido:&quot;</span><span class="s2">, </span><span class="s1">apellidoA</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">apellido </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+            <span class="s1">Especialidad esp </span><span class="s2">= </span><span class="s1">inputEspecialidad</span><span class="s2">(</span><span class="s1">espA</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">esp </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+            <span class="s1">Double costo </span><span class="s2">= </span><span class="s1">inputDoubleDefault</span><span class="s2">(</span><span class="s3">&quot;Costo consulta:&quot;</span><span class="s2">, </span><span class="s1">costoA</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">costo </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+            <span class="s1">String obra </span><span class="s2">= </span><span class="s1">inputDefault</span><span class="s2">(</span><span class="s3">&quot;Obra Social atendida (opcional):&quot;</span><span class="s2">, </span><span class="s1">obraA</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">obra </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return</span><span class="s2">;</span>
+
+            <span class="s1">service</span><span class="s2">.</span><span class="s1">actualizar</span><span class="s2">(</span><span class="s1">id</span><span class="s2">, </span><span class="s1">nombre</span><span class="s2">, </span><span class="s1">apellido</span><span class="s2">, </span><span class="s1">esp</span><span class="s2">, </span><span class="s1">costo</span><span class="s2">, </span><span class="s1">obra</span><span class="s2">);</span>
+            <span class="s1">cargarTabla</span><span class="s2">(); </span><span class="s1">showInfo</span><span class="s2">(</span><span class="s3">&quot;Médico actualizado.&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">RuntimeException ex</span><span class="s2">) { </span><span class="s1">showError</span><span class="s2">(</span><span class="s1">ex</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">()); }</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">eliminarSeleccionado</span><span class="s2">() {</span>
+        <span class="s0">int </span><span class="s1">row </span><span class="s2">= </span><span class="s1">tabla</span><span class="s2">.</span><span class="s1">getSelectedRow</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">row </span><span class="s2">== -</span><span class="s4">1</span><span class="s2">) { </span><span class="s1">showWarn</span><span class="s2">(</span><span class="s3">&quot;Seleccione un médico.&quot;</span><span class="s2">); </span><span class="s0">return</span><span class="s2">; }</span>
+        <span class="s0">long </span><span class="s1">id </span><span class="s2">= </span><span class="s1">Long</span><span class="s2">.</span><span class="s1">parseLong</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">model</span><span class="s2">.</span><span class="s1">getValueAt</span><span class="s2">(</span><span class="s1">row</span><span class="s2">, </span><span class="s4">0</span><span class="s2">)));</span>
+        <span class="s0">int </span><span class="s1">opt </span><span class="s2">= </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showConfirmDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s3">&quot;¿Eliminar médico ID &quot; </span><span class="s2">+ </span><span class="s1">id </span><span class="s2">+ </span><span class="s3">&quot;?&quot;</span><span class="s2">, </span><span class="s3">&quot;Confirmar&quot;</span><span class="s2">, </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">YES_NO_OPTION</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">opt </span><span class="s2">== </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">YES_OPTION</span><span class="s2">) {</span>
+            <span class="s0">try </span><span class="s2">{ </span><span class="s1">service</span><span class="s2">.</span><span class="s1">eliminar</span><span class="s2">(</span><span class="s1">id</span><span class="s2">); </span><span class="s1">cargarTabla</span><span class="s2">(); </span><span class="s1">showInfo</span><span class="s2">(</span><span class="s3">&quot;Médico eliminado.&quot;</span><span class="s2">); }</span>
+            <span class="s0">catch </span><span class="s2">(</span><span class="s1">RuntimeException ex</span><span class="s2">) { </span><span class="s1">showError</span><span class="s2">(</span><span class="s1">ex</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">()); }</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s5">// ---------- helpers UI ----------</span>
+    <span class="s0">private </span><span class="s1">String input</span><span class="s2">(</span><span class="s1">String t</span><span class="s2">) { </span><span class="s0">return </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showInputDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">t</span><span class="s2">); }</span>
+    <span class="s0">private </span><span class="s1">String inputDefault</span><span class="s2">(</span><span class="s1">String t</span><span class="s2">, </span><span class="s1">String v</span><span class="s2">) {</span>
+        <span class="s0">return </span><span class="s2">(</span><span class="s1">String</span><span class="s2">) </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showInputDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">t</span><span class="s2">, </span><span class="s3">&quot;Editar&quot;</span><span class="s2">, </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">PLAIN_MESSAGE</span><span class="s2">, </span><span class="s0">null</span><span class="s2">, </span><span class="s0">null</span><span class="s2">, </span><span class="s1">v</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">private void </span><span class="s1">showError</span><span class="s2">(</span><span class="s1">String m</span><span class="s2">){ </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showMessageDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">m</span><span class="s2">, </span><span class="s3">&quot;Error&quot;</span><span class="s2">, </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">ERROR_MESSAGE</span><span class="s2">); }</span>
+    <span class="s0">private void </span><span class="s1">showWarn</span><span class="s2">(</span><span class="s1">String m</span><span class="s2">){ </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showMessageDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">m</span><span class="s2">, </span><span class="s3">&quot;Atención&quot;</span><span class="s2">, </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">WARNING_MESSAGE</span><span class="s2">); }</span>
+    <span class="s0">private void </span><span class="s1">showInfo</span><span class="s2">(</span><span class="s1">String m</span><span class="s2">){ </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showMessageDialog</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">m</span><span class="s2">, </span><span class="s3">&quot;Información&quot;</span><span class="s2">, </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">INFORMATION_MESSAGE</span><span class="s2">); }</span>
+
+    <span class="s0">private </span><span class="s1">Especialidad inputEspecialidad</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s2">(</span><span class="s1">Especialidad</span><span class="s2">) </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showInputDialog</span><span class="s2">(</span>
+                <span class="s0">this</span><span class="s2">, </span><span class="s3">&quot;Especialidad:&quot;</span><span class="s2">, </span><span class="s3">&quot;Seleccionar&quot;</span><span class="s2">,</span>
+                <span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">QUESTION_MESSAGE</span><span class="s2">, </span><span class="s0">null</span><span class="s2">, </span><span class="s1">Especialidad</span><span class="s2">.</span><span class="s1">values</span><span class="s2">(), </span><span class="s1">Especialidad</span><span class="s2">.</span><span class="s1">values</span><span class="s2">()[</span><span class="s4">0</span><span class="s2">]</span>
+        <span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">private </span><span class="s1">Especialidad inputEspecialidad</span><span class="s2">(</span><span class="s1">Especialidad actual</span><span class="s2">) {</span>
+        <span class="s0">return </span><span class="s2">(</span><span class="s1">Especialidad</span><span class="s2">) </span><span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">showInputDialog</span><span class="s2">(</span>
+                <span class="s0">this</span><span class="s2">, </span><span class="s3">&quot;Especialidad:&quot;</span><span class="s2">, </span><span class="s3">&quot;Seleccionar&quot;</span><span class="s2">,</span>
+                <span class="s1">JOptionPane</span><span class="s2">.</span><span class="s1">QUESTION_MESSAGE</span><span class="s2">, </span><span class="s0">null</span><span class="s2">, </span><span class="s1">Especialidad</span><span class="s2">.</span><span class="s1">values</span><span class="s2">(), </span><span class="s1">actual</span>
+        <span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">private </span><span class="s1">Double inputDouble</span><span class="s2">(</span><span class="s1">String titulo</span><span class="s2">) {</span>
+        <span class="s1">String s </span><span class="s2">= </span><span class="s1">input</span><span class="s2">(</span><span class="s1">titulo</span><span class="s2">); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">s </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return null</span><span class="s2">;</span>
+        <span class="s0">try </span><span class="s2">{ </span><span class="s0">return </span><span class="s1">Double</span><span class="s2">.</span><span class="s1">parseDouble</span><span class="s2">(</span><span class="s1">s</span><span class="s2">); } </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">NumberFormatException e</span><span class="s2">) { </span><span class="s1">showError</span><span class="s2">(</span><span class="s3">&quot;Número inválido&quot;</span><span class="s2">); </span><span class="s0">return null</span><span class="s2">; }</span>
+    <span class="s2">}</span>
+    <span class="s0">private </span><span class="s1">Double inputDoubleDefault</span><span class="s2">(</span><span class="s1">String titulo</span><span class="s2">, </span><span class="s0">double </span><span class="s1">actual</span><span class="s2">) {</span>
+        <span class="s1">String s </span><span class="s2">= </span><span class="s1">inputDefault</span><span class="s2">(</span><span class="s1">titulo</span><span class="s2">, </span><span class="s1">String</span><span class="s2">.</span><span class="s1">valueOf</span><span class="s2">(</span><span class="s1">actual</span><span class="s2">)); </span><span class="s0">if </span><span class="s2">(</span><span class="s1">s </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) </span><span class="s0">return null</span><span class="s2">;</span>
+        <span class="s0">try </span><span class="s2">{ </span><span class="s0">return </span><span class="s1">Double</span><span class="s2">.</span><span class="s1">parseDouble</span><span class="s2">(</span><span class="s1">s</span><span class="s2">); } </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">NumberFormatException e</span><span class="s2">) { </span><span class="s1">showError</span><span class="s2">(</span><span class="s3">&quot;Número inválido&quot;</span><span class="s2">); </span><span class="s0">return null</span><span class="s2">; }</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>
