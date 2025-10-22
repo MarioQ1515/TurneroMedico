@@ -19,11 +19,11 @@ public class MainFrame extends JFrame {
         JPanel botones = new JPanel(new GridLayout(0, 1, 10, 10)); // 0 filas => se calcula según los componentes
         botones.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
 
-        JButton btnPacientes   = new JButton("🧍‍♂️  Gestionar Pacientes");
-        JButton btnMedicos     = new JButton("👨‍⚕️  Gestionar Médicos");
-        JButton btnTurnos      = new JButton("📅  Gestionar Turnos");
-        JButton btnAgenda      = new JButton("🗓️  Agenda de Médico");
-        JButton btnRecaudacion = new JButton("📈  Recaudación por Médico");
+        JButton btnPacientes   = new JButton("Gestionar Pacientes");
+        JButton btnMedicos     = new JButton("Gestionar Médicos");
+        JButton btnTurnos      = new JButton("Gestionar Turnos");
+        JButton btnAgenda      = new JButton("Agenda de Médico");
+        JButton btnRecaudacion = new JButton("Recaudación por Médico");
 
         btnPacientes.addActionListener(e -> new PacienteFrame().setVisible(true));
         btnMedicos.addActionListener(e -> new MedicoFrame().setVisible(true));
